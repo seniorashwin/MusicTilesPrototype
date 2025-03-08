@@ -1,29 +1,13 @@
-# Unity-specific generated files
+# Unity-generated files
 Library/
 Logs/
-obj/
 Temp/
+obj/
+Build/
+Builds/
 UserSettings/
-*.csproj
-*.sln
 
-# Rider/.idea files
-.idea/
-*.iml
-/shelf/
-/workspace.xml
-/projectSettingsUpdater.xml
-/contentModel.xml
-/modules.xml# Ignore Unity specific stuff
-[Ll]ibrary/
-[Tt]emp/
-[Oo]bj/
-[Bb]uild/
-[Bb]uilds/
-[Ll]ogs/
-[Uu]serSettings/
-
-# Ignore Visual Studio/JetBrains Rider files
+# Visual Studio/JetBrains Rider files
 .vscode/
 .idea/
 *.csproj
@@ -34,28 +18,29 @@ UserSettings/
 *.userosscache
 *.sln.docstates
 
-# Ignore crashes and debugging info
+# Crashes and debugging info
 *.pidb
 *.mdb
 *.opendb
 *.VC.db
 
-# Ignore cache files
-[Dd]ebug/
-[Ll]ibrary/
-[Bb]in/
-[Oo]bj/
+# Cache files
+Debug/
+Library/
+Bin/
+Obj/
 
-# Ignore auto-generated files
+# Auto-generated files
 *.bak
 *.swp
 *.lock
 *.lock.json
 
-# Ignore large Unity-specific packages
-Packages/com.unity.burst/*
-Packages/com.unity.render-pipelines.universal/*
+# Large Unity-specific files
+Packages/com.unity.burst/Editor/*
+Packages/com.unity.render-pipelines.universal/Editor/*
 
-/httpRequests/
-/dataSources/
-/dataSources.local.xml
+# HTTP and data sources
+httpRequests/
+dataSources/
+dataSources.local.xml
