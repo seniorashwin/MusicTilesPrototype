@@ -1,0 +1,20 @@
+# Unity-specific generated files
+Library/
+Logs/
+obj/
+Temp/
+UserSettings/
+*.csproj
+*.sln
+
+# Rider/.idea files
+.idea/
+*.iml
+/shelf/
+/workspace.xml
+/projectSettingsUpdater.xml
+/contentModel.xml
+/modules.xml
+/httpRequests/
+/dataSources/
+/dataSources.local.xml
