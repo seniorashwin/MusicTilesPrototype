@@ -1,15 +1,16 @@
-using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
 
 public class TileSpawner : MonoBehaviour
 {
     public GameObject tilePrefab;
     public AudioSource musicSource;
+    public Image backgroundPanel;  // UI Panel to pulse
     public float bpm = 120f;
 
     private float _beatInterval;
-    private float _nextBeatTime;
-    private bool _isSpawning = true;
+    private float _nextBeatTime = 0f;
 
     void Start()
     {
@@ -18,12 +19,14 @@ public class TileSpawner : MonoBehaviour
 
     void Update()
     {
-        if (!musicSource.isPlaying || !_isSpawning) return;
+        if (!musicSource.isPlaying) return;
 
         if (Time.time >= _nextBeatTime)
         {
             SpawnTile();
             _nextBeatTime += _beatInterval;
+
+            StartCoroutine(BackgroundPulse()); // Trigger pulse
         }
     }
 
@@ -32,24 +35,13 @@ public class TileSpawner : MonoBehaviour
         Instantiate(tilePrefab, new Vector3(Random.Range(-2f, 2f), 5, 0), Quaternion.identity);
     }
 
-    public void StopSpawning()
+    IEnumerator BackgroundPulse()
     {
-        _isSpawning = false;
-        musicSource.Stop();
-    }
-
-    public void ResetSpawning()
-    {
-        _isSpawning = true;
-        _nextBeatTime = Time.time + _beatInterval;
-    }
-
-    public void StartSpawningTiles()
-    {
-        _isSpawning = true;
-        _nextBeatTime = Time.time + _beatInterval;
-
-        if (!musicSource.isPlaying)
-            musicSource.Play();
+        if (backgroundPanel != null)
+        {
+            backgroundPanel.color = new Color(0, 0, 0, 0.5f);  // Darken screen slightly
+            yield return new WaitForSeconds(0.1f);
+            backgroundPanel.color = new Color(0, 0, 0, 0f);  // Reset
+        }
     }
 }
