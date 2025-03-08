@@ -6,14 +6,15 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public GameObject retryButton;
-    private bool _gameOver = false;
-    
-    public Transform tileParent; 
+    public Transform tileParent;
+
     private TileSpawner _tileSpawner;
+    private bool _gameOver = false;
 
     void Start()
     {
         retryButton.SetActive(false); // Hide retry button at start
+        _tileSpawner = Object.FindFirstObjectByType<TileSpawner>();
     }
 
     public void EndGame()
@@ -21,19 +22,15 @@ public class GameManager : MonoBehaviour
         if (!_gameOver)
         {
             _gameOver = true;
-            
-            // Show retry Button immediately 
             retryButton.SetActive(true);
-            
-            // Stop all tween and coroutines to avoid conflicts 
+
+            // Stop all tween and coroutines
             StopAllCoroutines();
             DOTween.KillAll();
-            
-            // Stop title spawning ( if active ) 
-            TileSpawner spawner = Object.FindFirstObjectByType<TileSpawner>();
-            if (spawner != null)
+
+            if (_tileSpawner != null)
             {
-                spawner.StopSpawning(); // Add StopSpawning() in TileSpawner.cs
+                _tileSpawner.StopSpawning(); 
             }
         }
     }
@@ -49,17 +46,19 @@ public class GameManager : MonoBehaviour
         // ✅ Reset timeScale to normal if needed
         Time.timeScale = 1f;
 
-        // ✅ Start tile spawning after a small delay to avoid overlap
+        // ✅ Restart tile spawning after a short delay
         Invoke(nameof(RestartSpawning), 0.5f);
+
+        // ✅ Reset game state
+        _gameOver = false;
     }
-    
+
     void RestartSpawning()
     {
         if (_tileSpawner != null)
         {
-            _tileSpawner.StartSpawningTiles(); // ✅ Restart tile spawning properly
+            _tileSpawner.ResetSpawning(); // Properly reset spawning
+            _tileSpawner.StartSpawningTiles(); // Start spawning tiles again
         }
     }
-
-
 }

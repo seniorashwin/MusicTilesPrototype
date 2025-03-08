@@ -1,33 +1,29 @@
-using System;
 using System.Collections;
 using UnityEngine;
-using System.Collections.Generic;
-using Random = UnityEngine.Random;
 
 public class TileSpawner : MonoBehaviour
 {
     public GameObject tilePrefab;
     public AudioSource musicSource;
-    public float bpm = 120f;  // Adjust this to match your song's speed
+    public float bpm = 120f;
 
     private float _beatInterval;
-    private float _nextBeatTime = 0f;
+    private float _nextBeatTime;
     private bool _isSpawning = true;
-    
-    
+
     void Start()
     {
-        _beatInterval = 60f / bpm;  // Time between beats
+        _beatInterval = 60f / bpm;
     }
 
     void Update()
     {
-        if (!musicSource.isPlaying || !_isSpawning) return;  // Wait for music to play
+        if (!musicSource.isPlaying || !_isSpawning) return;
 
         if (Time.time >= _nextBeatTime)
         {
-            SpawnTile();    
-            _nextBeatTime += _beatInterval;  // Schedule next beat
+            SpawnTile();
+            _nextBeatTime += _beatInterval;
         }
     }
 
@@ -38,33 +34,22 @@ public class TileSpawner : MonoBehaviour
 
     public void StopSpawning()
     {
-        musicSource.Stop(); // Prevent further tile spawning 
+        _isSpawning = false;
+        musicSource.Stop();
     }
 
     public void ResetSpawning()
     {
+        _isSpawning = true;
         _nextBeatTime = Time.time + _beatInterval;
-        _isSpawning = false;
     }
 
-    
     public void StartSpawningTiles()
     {
-        _isSpawning = true;  // Allow tile spawning
+        _isSpawning = true;
         _nextBeatTime = Time.time + _beatInterval;
 
-        // Start the music if not playing
         if (!musicSource.isPlaying)
             musicSource.Play();
     }
-
-    IEnumerator SpawnTiles()
-    {
-        while (true) 
-        {
-            SpawnTile(); 
-            yield return new WaitForSeconds(0.5f); // Small delay between each spawn
-        }
-    }
-
 }
