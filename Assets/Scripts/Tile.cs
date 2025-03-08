@@ -43,6 +43,15 @@ public class Tile : MonoBehaviour
         transform.DOScale(Vector3.zero, 0.2f).OnComplete(() => Destroy(gameObject));
     }
 
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("HitZone"))
+        {
+            _scoreManager.AddScore(10);
+            Destroy(gameObject);
+        }
+    }
+
 
     void Update()
     {
