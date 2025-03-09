@@ -1,16 +1,15 @@
 using UnityEngine;
-using DG.Tweening; 
+using DG.Tweening;
 
 public class Tile : MonoBehaviour
 {
-    public float baseSpeed = 3f;
-    private float _currentSpeed;
-
+    public float speed = 3f;
     private ScoreManager _scoreManager;
     public GameObject hitEffectPrefab;
-
-    public AudioSource musicSource;
+    public GameObject perfectTextPrefab; // ✅ For "PERFECT!" animation
+    
     private bool _canScore = false;
+    public AudioSource musicSource;
 
     void Start()
     {
@@ -20,10 +19,6 @@ public class Tile : MonoBehaviour
 
         GetComponent<Collider2D>().enabled = false;
         Invoke(nameof(EnableCollider), 0.2f);
-
-        // ✅ Scale speed based on combo
-        _currentSpeed = baseSpeed + (_scoreManager.GetCombo() * 0.1f);
-        _currentSpeed = Mathf.Min(_currentSpeed, 10f); // ✅ Cap speed at 10
     }
 
     void EnableCollider()
@@ -36,41 +31,79 @@ public class Tile : MonoBehaviour
     {
         if (_canScore && _scoreManager != null)
         {
-            _canScore = false;
+            _canScore = false; // ✅ Prevent double scoring
 
-            float timeDifference = Mathf.Abs(musicSource.time % (60f / 120f));
-            if (timeDifference <= 0.1f)
+            // ✅ Check for Perfect Hit
+            float timeOffset = Mathf.Abs((musicSource.time % (60f / 120f)) - (60f / 120f));
+            if (timeOffset <= 0.1f)
             {
                 _scoreManager.AddScore(20);
-                Debug.Log("PERFECT HIT!");
+                ShowPerfectText();
             }
             else
             {
                 _scoreManager.AddScore(10);
             }
 
+            // ✅ Play hit effect
             if (hitEffectPrefab != null)
             {
                 GameObject effect = Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
-                ParticleSystem ps = effect.GetComponent<ParticleSystem>();
-                if (ps != null)
-                {
-                    ps.Play(); 
-                }
-                Destroy(effect, 0.5f); 
+                Destroy(effect, 0.5f);
             }
 
+            // ✅ Animate tile shrinking
             transform.DOScale(Vector3.zero, 0.2f).OnComplete(() => Destroy(gameObject));
         }
     }
 
+    void ShowPerfectText()
+    {
+        if (perfectTextPrefab != null)
+        {
+            GameObject canvas = GameObject.Find("Canvas");
+            if (canvas == null)
+            {
+                Debug.LogWarning("Canvas not found in scene!");
+                return;
+            }
+
+            GameObject perfectText = Instantiate(perfectTextPrefab, transform.position, Quaternion.identity, canvas.transform);
+            RectTransform rectTransform = perfectText.GetComponent<RectTransform>();
+
+            if (rectTransform != null)
+            {
+                Vector2 screenPosition = Camera.main.WorldToScreenPoint(transform.position);
+                rectTransform.position = screenPosition;
+
+                // ✅ Make sure CanvasGroup exists before using it
+                CanvasGroup canvasGroup = perfectText.GetComponent<CanvasGroup>();
+                if (canvasGroup != null)
+                {
+                    perfectText.transform.localScale = Vector3.zero;
+                    perfectText.transform.DOScale(Vector3.one, 0.3f);
+                    canvasGroup.DOFade(0, 0.5f).SetDelay(0.3f).OnComplete(() =>
+                    {
+                        Destroy(perfectText);
+                    });
+                }
+                else
+                {
+                    Debug.LogWarning("CanvasGroup missing on PerfectTextPrefab");
+                }
+            }
+        }
+    }
+
+
     void Update()
     {
-        transform.position += Vector3.down * (_currentSpeed * Time.deltaTime);
+        transform.position += Vector3.down * (speed * Time.deltaTime);
 
+        // ✅ Destroy off-screen tiles
         if (transform.position.y < -5f)
         {
             Destroy(gameObject);
         }
     }
-} 
+}
