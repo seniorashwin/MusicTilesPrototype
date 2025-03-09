@@ -17,6 +17,7 @@ public class TileSpawner : MonoBehaviour
     private ScoreManager _scoreManager;
     private AudioSource _audioSource;
     private bool _isPulsing = false;
+    private bool _isBoosting = false; // ✅ Added flag for speed boost
 
     void Start()
     {
@@ -71,29 +72,32 @@ public class TileSpawner : MonoBehaviour
 
     IEnumerator BackgroundPulse()
     {
+        if (_isPulsing || _isBoosting) yield break; // ✅ Block if boosting is active
+    
         _isPulsing = true;
 
         if (backgroundPanel != null)
         {
-            backgroundPanel.color = new Color(0, 0, 0, 0.5f); // Darken background
+            backgroundPanel.color = new Color(0, 0, 0, 0.5f);
             yield return new WaitForSeconds(0.1f);
-            backgroundPanel.color = new Color(0, 0, 0, 0f); // Reset
+            backgroundPanel.color = new Color(0, 0, 0, 0f);
         }
 
         _isPulsing = false;
     }
-
     IEnumerator SpeedBoostEffect()
     {
-        _isPulsing = true;
+        if (_isBoosting) yield break; // ✅ Prevent overlapping boosts
+
+        _isBoosting = true;
 
         if (backgroundPanel != null)
         {
-            backgroundPanel.color = new Color(1f, 0f, 0f, 0.5f); // Flash red
+            backgroundPanel.color = new Color(1f, 0f, 0f, 0.5f);
             yield return new WaitForSeconds(0.2f);
-            backgroundPanel.color = new Color(0, 0, 0, 0f); // Reset
+            backgroundPanel.color = new Color(0, 0, 0, 0f);
         }
 
-        _isPulsing = false;
+        _isBoosting = false;
     }
 }

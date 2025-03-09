@@ -175,6 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7da1120a23d96234f9fc532df11f41fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseSpeed: 3
+  speed: 3
   hitEffectPrefab: {fileID: 3668955227382206819, guid: dee5cc066a1a4f74bba197d9adb75600, type: 3}
-  musicSource: {fileID: 0}
+  perfectTextPrefab: {fileID: 7467233984728702166, guid: a0888c3bf1c72054bb454ae2da67acda, type: 3}
+  musicSource: {fileID: 6885269916087921029, guid: 3d35b4c2453476d44939b079e55d85a8, type: 3}
