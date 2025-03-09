@@ -78,7 +78,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -175,5 +175,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7da1120a23d96234f9fc532df11f41fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
+  baseSpeed: 3
   hitEffectPrefab: {fileID: 3668955227382206819, guid: dee5cc066a1a4f74bba197d9adb75600, type: 3}
+  musicSource: {fileID: 0}

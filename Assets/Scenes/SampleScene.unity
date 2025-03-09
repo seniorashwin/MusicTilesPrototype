@@ -639,8 +639,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 1614996889025706371, guid: 2c68b34c12b5121419676d5f3c235801, type: 3}
   musicSource: {fileID: 688917157}
-  backgroundPanel: {fileID: 0}
+  backgroundPanel: {fileID: 950527687}
   bpm: 120
+  comboSound: {fileID: 8300000, guid: b68965d87075beb48a8bf23e11a73197, type: 3}
 --- !u!4 &716416627
 Transform:
   m_ObjectHideFlags: 0
