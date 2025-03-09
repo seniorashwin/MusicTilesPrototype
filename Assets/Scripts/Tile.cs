@@ -3,10 +3,13 @@ using DG.Tweening;
 
 public class Tile : MonoBehaviour
 {
-    public float speed = 3f;
+    public float baseSpeed = 3f;
+    private float _currentSpeed;
+
     private ScoreManager _scoreManager;
     public GameObject hitEffectPrefab;
-    
+
+    public AudioSource musicSource;
     private bool _canScore = false;
 
     void Start()
@@ -15,9 +18,12 @@ public class Tile : MonoBehaviour
         if (_scoreManager == null)
             Debug.LogError("ScoreManager not found in scene!");
 
-        // ✅ Delay collider activation to avoid instant scoring
         GetComponent<Collider2D>().enabled = false;
         Invoke(nameof(EnableCollider), 0.2f);
+
+        // ✅ Scale speed based on combo
+        _currentSpeed = baseSpeed + (_scoreManager.GetCombo() * 0.1f);
+        _currentSpeed = Mathf.Min(_currentSpeed, 10f); // ✅ Cap speed at 10
     }
 
     void EnableCollider()
@@ -30,10 +36,19 @@ public class Tile : MonoBehaviour
     {
         if (_canScore && _scoreManager != null)
         {
-            _canScore = false;  // ✅ Prevent double scoring
-            _scoreManager.AddScore(10);
+            _canScore = false;
 
-            // ✅ Play hit effect manually
+            float timeDifference = Mathf.Abs(musicSource.time % (60f / 120f));
+            if (timeDifference <= 0.1f)
+            {
+                _scoreManager.AddScore(20);
+                Debug.Log("PERFECT HIT!");
+            }
+            else
+            {
+                _scoreManager.AddScore(10);
+            }
+
             if (hitEffectPrefab != null)
             {
                 GameObject effect = Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
@@ -42,23 +57,20 @@ public class Tile : MonoBehaviour
                 {
                     ps.Play(); 
                 }
-
                 Destroy(effect, 0.5f); 
             }
 
-            // ✅ Animate shrinking before destroying the tile
             transform.DOScale(Vector3.zero, 0.2f).OnComplete(() => Destroy(gameObject));
         }
     }
 
     void Update()
     {
-        transform.position += Vector3.down * (speed * Time.deltaTime);
+        transform.position += Vector3.down * (_currentSpeed * Time.deltaTime);
 
-        // ✅ Destroy off-screen tiles properly
         if (transform.position.y < -5f)
         {
             Destroy(gameObject);
         }
     }
-}
+} 
